@@ -2,7 +2,7 @@
 
 Lambda function doesn't have explicit template parameters, but it is possible to emulate them by passing arguments in lambda function and interpret them similarly as explicit template parameters in a template function.
 
-For instance to allocate `array` on stack in a template function:
+For instance, to allocate `array` on stack in a template function:
 ```C++
 template <int N>
 void Test() { std::array<int, N> arr; };
