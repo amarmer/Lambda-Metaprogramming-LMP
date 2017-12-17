@@ -19,7 +19,8 @@ struct integral_constant {
 };
 ```
 
-Then in a lambda function an argument can be used similarly to explicit template parameter in a template function.
+
+It is a generic approach when in a lambda function an argument can be used similarly to explicit template parameter in a template function.
 
 Let's create a struct `ConstInt` and template function `RecusrsiveLambda':
 ```C++
