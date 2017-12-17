@@ -1,18 +1,9 @@
 # Recursive Lambda and Metaprogramming
 
-How in a function to create std::array on stack with `contexpr int N`.
-It is is obviuos how to do in a template function, for instance like:
+Bellow is example how in a lambda function to create std::array on stack with `contexpr int N`:
 
 ```C++
-template <int SIZE>
-void Test() { std::array<SIZE> arr; }
-
-Test<10>();
-```
-And this how to do it in lambda function:
-
-```C++
-auto test = [](auto size) { std::array<size> arr; }
+auto test = [](auto size) { std::array<decltype(size)::value_type, static_cast<size_t>(size)> arr; };
 
 test(std::integral_contant<int, 10>());
 ```
@@ -21,6 +12,8 @@ It works because there a cast operator to `int` in `integral_constant` which loo
 template<class T, T val>
 struct integral_constant {	
   static constexpr T value = val;
+	
+  using value_type = T;
   
   constexpr operator T() const { return (value); }
 };
@@ -57,3 +50,32 @@ RecursiveLambda(
 );
 ```
 
+Example how a new tuple with reversed elements can be created:
+
+```C++
+auto var = RecursiveLambda(
+  [&tpl](auto f, auto index, auto&&...args) {
+    if constexpr(0 == sizeof...(args))
+      return f(f, index.plus<1>(), std::make_tuple(std::get<index>(tpl)));
+    else {
+      if constexpr(index < TupleSize<decltype(tpl)>())
+        return f(f, index.plus<1>(), std::tuple_cat(std::make_tuple(std::get<index>(tpl)), args...));
+      else
+        return std::forward<decltype(args)...>(args...);
+    }
+  }
+ ); 
+```
+
+And the same code can be simplified if added `tuple<>()` after lambda function:
+```C++
+auto var = RecursiveLambda(
+  [&tpl](auto lambda, auto index, const auto& curTpl) {
+    if constexpr(index < TupleSize<decltype(tpl)>())
+      return lambda(lambda, index.plus<1>(), std::tuple_cat(std::make_tuple(std::get<index>(tpl)), curTpl));
+    else
+      return curTpl;
+  },
+  std::tuple<>()
+);
+```
