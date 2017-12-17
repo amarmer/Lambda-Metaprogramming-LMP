@@ -45,8 +45,9 @@ template <typename TPL>
 constexpr auto TupleSize() { 
   return std::tuple_size<typename std::decay<TPL>::type>::value; 
 }
-
 ```
+
+RecursiveLambda can be similarly as a template function with variadic parameters are used. 
 
 Example of how a tuple can be enumerated and it's elements are printed out:
 ```C++
