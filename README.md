@@ -16,7 +16,7 @@ auto Test = [](auto size) { std::array<int, size.value> arr; };
 
 Test(std::integral_contant<int, 10>());
 ```
-It works because `value` is `constexpr` in `integral_constant` bellow:
+It works because `value` is `constexpr` in `std::integral_constant` bellow:
 ```C++
 template<class T, T val>
 struct integral_constant {	
