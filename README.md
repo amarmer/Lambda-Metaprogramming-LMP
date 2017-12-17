@@ -83,7 +83,7 @@ And the same code can be simplified if added `tuple<>()` parameter after lambda 
 ```C++
 auto newTpl = RecursiveLambda(
   [&tpl](auto lambda, auto index, const auto& curTpl) {
-    if constexpr(index < std::tuple_size<typename std::decay<TPL>::type>::value)
+    if constexpr(index < TupleSize<decltype(tpl)>())
       return lambda(lambda, index.plus<1>(), std::tuple_cat(std::make_tuple(std::get<index>(tpl)), curTpl));
     else
       return curTpl;
