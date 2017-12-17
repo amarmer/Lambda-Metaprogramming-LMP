@@ -16,20 +16,19 @@ auto test = [](auto size) { std::array<size> arr; }
 
 test(std::integral_contant<int, 10>());
 ```
-`integral_constant` looks like:
+It works because there a cast operator to `int` in `integral_constant` which looks like:
 ```C++
 template<class T, T val>
 struct integral_constant {	
-	static constexpr T value = val;
+  static constexpr T value = val;
   
-  constexpr operator value_type() const {	
-		return (value);
-	}
+  constexpr operator T() const { return (value); }
 };
 ```
 
+Then a lambda function an argument can be used similarly to a template function with explicit template parameter.
 
-Let's create a struct `ConstInt`:
+Let's create a struct `ConstInt` and template function `RecusrsiveLambda':
 ```C++
 template <int N>
 struct ConstInt: public integral_constant<int, N> {
@@ -38,5 +37,11 @@ struct ConstInt: public integral_constant<int, N> {
     return ConstInt<N + INC>(); 
   }
 };
+
+template <typename FUNC, typename ...ARGS>
+constexpr auto RecursiveLambda(FUNC lambda, ARGS&&... args) { 
+  return lambda(lambda, ConstInt<0>(), args...); 
+}
 ```
+
 
