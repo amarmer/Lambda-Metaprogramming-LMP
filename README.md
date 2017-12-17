@@ -44,4 +44,16 @@ constexpr auto RecursiveLambda(FUNC lambda, ARGS&&... args) {
 }
 ```
 
+Bellow is how a tuple can be enumerated and it's elements are printed out:
+```C++
+RecursiveLambda(
+  [&tpl](auto lambda, auto index) {
+    if constexpr(index < TupleSize<decltype(tpl)>()) {
+      std::cout << std::get<index>(tpl) << std::endl;
+
+      lambda(lambda, index.plus<1>());
+    }
+  }
+);
+```
 
