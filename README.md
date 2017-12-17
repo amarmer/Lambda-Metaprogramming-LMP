@@ -48,7 +48,7 @@ constexpr auto TupleSize() {
 
 ```
 
-Bellow is how a tuple can be enumerated and it's elements are printed out:
+Example of how a tuple can be enumerated and it's elements are printed out:
 ```C++
 RecursiveLambda(
   [&tpl](auto lambda, auto index) {
@@ -62,7 +62,7 @@ RecursiveLambda(
 ```
 Notice that `index` in `std::get<index>(tpl)` is `ConstInt` and it compiles beacuse of cast to `int` in `integral_constant`.
 
-Example how a new tuple with reversed elements can be created:
+Example of how a new tuple with reversed elements can be created:
 
 ```C++
 auto reversedTpl = RecursiveLambda(
@@ -92,7 +92,7 @@ auto reversedTpl = RecursiveLambda(
 );
 ```
 
-Example how to cancatenate 2 tuples:
+Example of how to cancatenate 2 tuples:
 ```C++
 auto catTpl = RecursiveLambda(
   [&tpl1, &tpl2](auto lambda, auto index, auto&&...args) {
