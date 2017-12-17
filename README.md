@@ -1,9 +1,18 @@
 # Recursive Lambda and Metaprogramming
 
-Bellow is example how in a lambda function to create std::array on stack with `contexpr int N`:
+Lambda function doesn't have explicit template parameters, but it is possible to emulate them by passing arguments in lambda function and interpret them similarly as explicit template parameters in a template function.
+
+For instance allocate `array` on stack in atemplate function:
+```C++
+template <int N>
+void Test() { std::array<int, N> arr; };
+
+Test<10>();
+```
+This is how it is can be done in a lambda function:
 
 ```C++
-auto test = [](auto size) { std::array<decltype(size)::value_type, static_cast<size_t>(size)> arr; };
+auto test = [](auto size) { std::array<int, static_cast<size_t>(size)> arr; };
 
 test(std::integral_contant<int, 10>());
 ```
@@ -12,15 +21,10 @@ It works because there a cast operator to `int` in `integral_constant` which loo
 template<class T, T val>
 struct integral_constant {	
   static constexpr T value = val;
-	
-  using value_type = T;
   
   constexpr operator T() const { return (value); }
 };
 ```
-
-
-It is a generic approach when in a lambda function an argument can be used similarly to explicit template parameter in a template function.
 
 Let's create a struct `ConstInt` and template function `RecursiveLambda':
 ```C++
