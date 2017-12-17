@@ -65,7 +65,7 @@ Notice that `index` in `std::get<index>(tpl)` is `ConstInt` and it compiles beac
 Example how a new tuple with reversed elements can be created:
 
 ```C++
-auto newTpl = RecursiveLambda(
+auto reversedTpl = RecursiveLambda(
   [&tpl](auto lambda, auto index, auto&&...args) {
     if constexpr(0 == sizeof...(args))
       return lambda(lambda, index.plus<1>(), std::make_tuple(std::get<index>(tpl)));
@@ -79,7 +79,7 @@ auto newTpl = RecursiveLambda(
  ); 
 ```
 
-And the same code can be simplified if added `tuple<>()` parameter after lambda function:
+Code above can be simplified if added `tuple<>()` parameter after lambda function:
 ```C++
 auto newTpl = RecursiveLambda(
   [&tpl](auto lambda, auto index, const auto& curTpl) {
@@ -94,7 +94,7 @@ auto newTpl = RecursiveLambda(
 
 Example how to cancatenate 2 tuples:
 ```C++
-auto newTpl = RecursiveLambda(
+auto reversedTpl = RecursiveLambda(
   [&tpl1, &tpl2](auto lambda, auto index, auto&&...args) {
     constexpr auto total = TupleSize<decltype(tpl1)>() + TupleSize<decltype(tpl2)>();
     if constexpr(0 == total)
