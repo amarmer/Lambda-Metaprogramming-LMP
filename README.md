@@ -47,7 +47,7 @@ constexpr auto TupleSize() {
 }
 ```
 
-RecursiveLambda can be similarly as a template function with variadic parameters are used. 
+RecursiveLambda can be used similarly as a template function with variadic parameters are used. 
 
 Example of how a tuple can be enumerated and it's elements are printed out:
 ```C++
