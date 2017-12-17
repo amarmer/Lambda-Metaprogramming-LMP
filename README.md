@@ -60,7 +60,7 @@ RecursiveLambda(
   }
 );
 ```
-Notice that `index` in `std::get<index>(tpl)' is `ConstInt` and it compiles beacuse of cast to `int` in `integral_constant`.
+Notice that `index` in `std::get<index>(tpl)` is `ConstInt` and it compiles beacuse of cast to `int` in `integral_constant`.
 
 Example how a new tuple with reversed elements can be created:
 
