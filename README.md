@@ -22,7 +22,7 @@ struct integral_constant {
 
 It is a generic approach when in a lambda function an argument can be used similarly to explicit template parameter in a template function.
 
-Let's create a struct `ConstInt` and template function `RecusrsiveLambda':
+Let's create a struct `ConstInt` and template function `RecursiveLambda':
 ```C++
 template <int N>
 struct ConstInt: public integral_constant<int, N> {
