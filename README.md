@@ -81,7 +81,7 @@ auto reversedTpl = RecursiveLambda(
 
 Code above can be simplified if added `tuple<>()` parameter after lambda function:
 ```C++
-auto newTpl = RecursiveLambda(
+auto reversedTpl = RecursiveLambda(
   [&tpl](auto lambda, auto index, const auto& curTpl) {
     if constexpr(index < TupleSize<decltype(tpl)>())
       return lambda(lambda, index.plus<1>(), std::tuple_cat(std::make_tuple(std::get<index>(tpl)), curTpl));
@@ -94,7 +94,7 @@ auto newTpl = RecursiveLambda(
 
 Example how to cancatenate 2 tuples:
 ```C++
-auto reversedTpl = RecursiveLambda(
+auto catTpl = RecursiveLambda(
   [&tpl1, &tpl2](auto lambda, auto index, auto&&...args) {
     constexpr auto total = TupleSize<decltype(tpl1)>() + TupleSize<decltype(tpl2)>();
     if constexpr(0 == total)
