@@ -9,7 +9,7 @@ void Test() { std::array<SIZE> arr; }
 
 Test<10>();
 ```
-How to do it in lambda function?
+And this how to do it in lambda function:
 
 ```C++
 auto test = [](auto size) { std::array<size> arr; }
