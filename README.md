@@ -12,9 +12,9 @@ Test<10>();
 This is how it is can be done in a lambda function:
 
 ```C++
-auto test = [](auto size) { std::array<int, size.value> arr; };
+auto Test = [](auto size) { std::array<int, size.value> arr; };
 
-test(std::integral_contant<int, 10>());
+Test(std::integral_contant<int, 10>());
 ```
 It works because `value` is `constexpr` in `integral_constant` bellow:
 ```C++
