@@ -29,7 +29,7 @@ struct integral_constant {
 Let's create a struct `ConstInt` and template function `RecursiveLambda`:
 ```C++
 template <int N>
-struct ConstInt: public integral_constant<int, N> {
+struct ConstInt: public std::integral_constant<int, N> {
   template <int INC>
   constexpr auto plus() { 
     return ConstInt<N + INC>(); 
