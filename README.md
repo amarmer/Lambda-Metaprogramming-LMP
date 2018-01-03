@@ -1,94 +1,105 @@
-# Recursive Lambda and Metaprogramming
+# Lambda Metaprogramming (LMP)
 
-Lambda function doesn't have explicit template parameters, but it is possible to emulate them by passing arguments in a lambda function and interpret them similarly as explicit template parameters in a template function.
+#### Word `metaprogramming` is used together with word `template` - `template metaprogramming (TMP)`. 
+#### Here is described that `metaprogramming` can be used with `lambda` as well - `lambda metaprogramming (LMP)`. 
 
-For instance, to allocate `array` on stack in a template function:
+This is a classic example of calculating factorial using TMP:
 ```C++
-template <int N>
-void Test() { std::array<int, N> arr; };
-
-Test<10>();
-```
-This is how it is can be done in a lambda function:
-
-```C++
-auto Test = [](auto size) { std::array<int, size.value> arr; };
-
-Test(std::integral_contant<int, 10>());
-```
-It works because `value` is `constexpr` in `std::integral_constant` bellow:
-```C++
-template<class T, T val>
-struct integral_constant {	
-  static constexpr T value = val;
-  
-  constexpr operator T() const { return (value); }
+template <unsigned int n>
+constexpr int factorial() {
+  if constexpr(0 == n)
+    return 1;
+  else
+    return n * factorial<n - 1>();
 };
 ```
 
-Let's create a struct `ConstInt` and template function `RecursiveLambda`:
-```C++
-template <int N>
-struct ConstInt: public std::integral_constant<int, N> {
-  template <int INC>
-  constexpr auto plus() { 
-    return ConstInt<N + INC>(); 
-  }
-};
+Bellow is implementation of factorial using LMP.
 
+Since lambda doesn't have name, in order to simplify calling it recursively, bellow is a helper function `RecursiveLambda`.
+
+```C++
 template <typename FUNC, typename ...ARGS>
-constexpr auto RecursiveLambda(FUNC lambda, ARGS&&... args) { 
-  return lambda(lambda, ConstInt<0>(), args...); 
-}
-
-template <typename TPL>
-constexpr auto TupleSize() { 
-  return std::tuple_size<typename std::decay<TPL>::type>::value; 
-}
+constexpr auto RecursiveLambda(FUNC lambda, ARGS&&... args) { return lambda(lambda, args...); }
 ```
 
-`RecursiveLambda` can be used similarly as a template function with variadic parameters. 
+```C++
+auto factorial = [](auto n) {
+  return RecursiveLambda(
+    [](auto lambda, auto n) {
+      if constexpr(0 == n)
+        return 1;
+      else
+        return n * lambda(lambda, std::integral_constant<int, n - 1>());
+    },
+    n
+  );
+};
+
+constexpr auto factorial_5 = factorial(std::integral_constant<int, 5>());
+```
+
+Notice that `(0 == n)` compiles because `std::integral_constant` has `constexpr` cast operator to `int`.
+
+Let's look at more LMP examples with `tuple`.
+
+Bellow is a helper function `TupleSize` wich simplifies getting size of a tuple.
+
+```C+ +
+template <typename TPL>
+constexpr auto TupleSize() { return std::tuple_size<typename std::decay<TPL>::type>::value; }
+```
+
+And a helper alias `IntegralConstant`.
+
+```C+ +
+template <auto N>
+using IntegralConstant = std::integral_constant<decltype(N), N>;
+```
 
 Example of how a tuple can be enumerated and it's elements are printed out:
-```C++
+
+```C+ +
 RecursiveLambda(
   [&tpl](auto lambda, auto index) {
     if constexpr(index < TupleSize<decltype(tpl)>()) {
       std::cout << std::get<index>(tpl) << std::endl;
 
-      lambda(lambda, index.plus<1>());
+      lambda(lambda, IntegralConstant<index + 1>());
     }
-  }
+  },
+  IntegralConstant<0>());
 );
 ```
-`index` in `std::get<index>(tpl)` is `ConstInt` and it compiles beacuse of cast to `int` in `integral_constant`.
 
-Example of how a new tuple with reversed elements can be created:
+Example of how a new tuple with reversed elements can be created :
 
 ```C++
 auto reversedTpl = RecursiveLambda(
   [&tpl](auto lambda, auto index, auto&&...args) {
     if constexpr(0 == sizeof...(args))
-      return lambda(lambda, index.plus<1>(), std::make_tuple(std::get<index>(tpl)));
+      return lambda(lambda, IntegralConstant<index + 1>(), std::make_tuple(std::get<index>(tpl)));
     else {
       if constexpr(index < TupleSize<decltype(tpl)>())
-        return lambda(lambda, index.plus<1>(), std::tuple_cat(std::make_tuple(std::get<index>(tpl)), args...));
+        return lambda(lambda, IntegralConstant<index + 1>(), std::tuple_cat(std::make_tuple(std::get<index>(tpl)), args...));
       else
         return std::forward<decltype(args)...>(args...);
     }
-  }
- ); 
+  },
+  IntegralConstant<0>()
+);
 ```
 
-Code above can be simplified if added `tuple<>()` parameter after lambda function:
+Code above can be simplified if added `tuple<>()` parameter after lambda function :
 ```C++
 auto reversedTpl = RecursiveLambda(
   [&tpl](auto lambda, auto index, const auto& curTpl) {
     if constexpr(index < TupleSize<decltype(tpl)>())
-      return lambda(lambda, index.plus<1>(), std::tuple_cat(std::make_tuple(std::get<index>(tpl)), curTpl));
+      return lambda(lambda, IntegralConstant<index + 1>(), std::tuple_cat(std::make_tuple(std::get<index>(tpl)), curTpl));
     else
       return curTpl;
   },
+  IntegralConstant<0>(),
   std::tuple<>()
 );
 ```
@@ -109,14 +120,14 @@ auto catTpl = RecursiveLambda(
       };
 
       if constexpr(0 == sizeof...(args))
-        return lambda(lambda, index.plus<1>(), getEl(index));
+        return lambda(lambda, IntegralConstant<index + 1>(), getEl(index));
       else
         if constexpr(index < total)
-          return lambda(lambda, index.plus<1>(), args..., getEl(index));
+          return lambda(lambda, IntegralConstant<index + 1>(), args..., getEl(index));
         else
           return std::make_tuple(args...);
     }
-  }
+  },
+  IntegralConstant<0>()
 );
-
 ```
