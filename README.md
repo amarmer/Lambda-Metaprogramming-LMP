@@ -1,7 +1,7 @@
 # Lambda Metaprogramming (LMP)
 
-#### Word `metaprogramming` is used together with word `template` - `template metaprogramming (TMP)`. 
-#### Here is described that `metaprogramming` can be used with `lambda` as well - `lambda metaprogramming (LMP)`. 
+##### Word `metaprogramming` is used together with word `template` - `template metaprogramming (TMP)`. 
+##### Here is described that `metaprogramming` can be used with `lambda` as well - `lambda metaprogramming (LMP)`. 
 
 This is a classic example of calculating factorial using TMP:
 ```C++
