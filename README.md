@@ -81,7 +81,9 @@ auto reversedTpl = RecursiveLambda(
       return lambda(lambda, IntegralConstant<index + 1>(), std::make_tuple(std::get<index>(tpl)));
     else {
       if constexpr(index < TupleSize<decltype(tpl)>())
-        return lambda(lambda, IntegralConstant<index + 1>(), std::tuple_cat(std::make_tuple(std::get<index>(tpl)), args...));
+        return lambda(lambda, 
+                      IntegralConstant<index + 1>(), 
+                      std::tuple_cat(std::make_tuple(std::get<index>(tpl)), args...));
       else
         return std::forward<decltype(args)...>(args...);
     }
@@ -95,7 +97,10 @@ Code above can be simplified if added `tuple<>()` parameter after lambda functio
 auto reversedTpl = RecursiveLambda(
   [&tpl](auto lambda, auto index, const auto& curTpl) {
     if constexpr(index < TupleSize<decltype(tpl)>())
-      return lambda(lambda, IntegralConstant<index + 1>(), std::tuple_cat(std::make_tuple(std::get<index>(tpl)), curTpl));
+      return lambda(lambda, 
+                    IntegralConstant<index + 1>(), 
+                    std::tuple_cat(std::make_tuple(std::get<index>(tpl)), 
+                    curTpl));
     else
       return curTpl;
   },
