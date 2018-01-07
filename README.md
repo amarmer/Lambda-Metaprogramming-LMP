@@ -19,8 +19,8 @@ Bellow is implementation of factorial using LMP.
 Since lambda doesn't have name, in order to simplify calling it recursively, a helper function `RecursiveLambda` is used.
 
 ```C++
-template <typename FUNC, typename ...ARGS>
-constexpr auto RecursiveLambda(FUNC lambda, ARGS&&... args) { return lambda(lambda, args...); }
+template <typename LAMBDA, typename ...ARGS>
+constexpr auto RecursiveLambda(LAMBDA lambda, ARGS&&... args) { return lambda(lambda, args...); }
 ```
 
 ```C++
@@ -135,4 +135,32 @@ auto catTpl = RecursiveLambda(
   },
   IntegralConstant<0>()
 );
+```
+
+After posting this arcticle on reddit/cpp, reddit.com/user/dima_mendeleev suggested a simplification, with which
+no need to call `lambda(lambda, ...)`, just `lambda(...)`.
+It compiles only with GCC 7.2.0.
+```C++
+template <typename LAMBDA>
+constexpr auto RecursiveLambda(LAMBDA lambda)
+{
+  return [lambda](auto&&... args)
+  {
+    return lambda(RecursiveLambda(lambda), args...);
+  };
+}
+```
+
+With modified `RecursiveLambda` factorial looks like:
+```C++
+auto factorial = RecursiveLambda(
+  [](auto lambda, auto n) {
+    if constexpr(n == 0)
+      return 1;
+    else
+        return n * lambda(IntegralConstant<n - 1>());
+  }
+);
+
+constexpr auto factorial_5 = factorial(IntegralConstant<5>());
 ```
