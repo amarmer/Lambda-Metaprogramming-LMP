@@ -158,7 +158,7 @@ auto factorial = RecursiveLambda(
     if constexpr(n == 0)
       return 1;
     else
-        return n * lambda(IntegralConstant<n - 1>());
+      return n * lambda(IntegralConstant<n - 1>());
   }
 );
 
