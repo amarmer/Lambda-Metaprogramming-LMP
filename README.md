@@ -164,3 +164,18 @@ auto factorial = RecursiveLambda(
 
 constexpr auto factorial_5 = factorial(IntegralConstant<5>());
 ```
+
+and creating reversed tuple like:
+```C++
+auto reversedTpl = RecursiveLambda(
+  [](auto lambda, const auto& tpl, auto index, const auto& curTpl) {
+    if constexpr(index < TupleSize<decltype(tpl)>())
+      return lambda(tpl, 
+                    IntegralConstant<index + 1>(), 
+                    std::tuple_cat(std::make_tuple(std::get<index>(tpl)), 
+                    curTpl));
+    else
+      return curTpl;
+  }
+)(tpl, IntegralConstant<0>(), std::tuple<>());
+```
