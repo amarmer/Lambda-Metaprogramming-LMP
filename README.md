@@ -181,8 +181,7 @@ auto reversedTpl = RecursiveLambda(
   }
 )(tpl, IntegralConstant<0>(), std::tuple<>());
 ```
-
-
+<br/>
 It would be usefull in C++ to have keyword `lambda` (similar to keyword `this` inside a class).<br/>
 Then there is no need to use `RecursiveLambda` and code above could look like this.
 ```C++
