@@ -3,7 +3,7 @@
 ##### Word `metaprogramming` is used together with word `template` - `template metaprogramming (TMP)`. 
 ##### Here is described that `metaprogramming` can be used with `lambda` as well - `lambda metaprogramming (LMP)`. 
 
-For instance in a template function `foo` allocates array on stack using `std::array` with `type` and `size.
+For instance in a template function `foo` allocates array on stack using `std::array`.
 ```C++
 template <int SIZE>
 void foo() {
