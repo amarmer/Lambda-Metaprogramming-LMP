@@ -86,7 +86,7 @@ Then this function can be used to print tuple's elements using formatting lambda
 ```C++
 std::function<void(std::function<void(int, const std::string&)>)> printLambda;
 
-printLambda = [tpl](auto formatLambda) {
+printLambda = [&tpl](auto formatLambda) {
   RecursiveLambda(
     [](auto lambda, const auto& tpl, auto formatLambda, auto index) {
       if constexpr(index < TupleSize<decltype(tpl)>()) {
