@@ -23,7 +23,7 @@ foo(std::integral_constant<int, 100>());
 ```
 `std::array<char, size>` compiles because `size` is `std::integral_constant` which has `constexpr` cast operator to `int`.
 
-TMP is used often with recursion. For instance, a classic example of calculating factorial using TMP.
+TMP is often used with recursion. For instance, a classic example of calculating factorial using TMP.
 ```C++
 template <unsigned int n>
 constexpr int factorial() {
