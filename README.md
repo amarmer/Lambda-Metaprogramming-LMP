@@ -104,6 +104,7 @@ printLambda = [tpl](auto formatLambda) {
 printLambda([](int index, const std::string& tupleEl) {
   std::cout << "tuple[" << index << "]: " << tupleEl << std::endl;
 });
+```
 
 Example of how a new tuple with reversed elements can be created.
 ```C++
