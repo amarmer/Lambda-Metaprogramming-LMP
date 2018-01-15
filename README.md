@@ -50,7 +50,7 @@ constexpr auto RecursiveLambda(LAMBDA lambda)
 }
 ```
 
-Factorial implementattion using `RecursiveLambda`.
+Factorial implementation using `RecursiveLambda`.
 ```C++
 auto factorial = RecursiveLambda(
   [&tpl](auto lambda, auto n) {
