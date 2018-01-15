@@ -80,22 +80,32 @@ template <auto N>
 using IntegralConstant = std::integral_constant<decltype(N), N>;
 ```
 
-Example of how a tuple can be enumerated and it's elements are printed out:
+Example of lambda function `printLambda` which enumerates a `tuple` and converts each tuple's element to `string`.<br/> 
+Then this function can be used to print tuple's elements using formatting lambda which is passed as a parameter.
 
 ```C++
-RecursiveLambda(
-  [&tpl](auto lambda, auto index) {
-    if constexpr(index < TupleSize<decltype(tpl)>()) {
-      std::cout << std::get<index>(tpl) << std::endl;
+std::function<void(std::function<void(int, const std::string&)>)> printLambda;
 
-      lambda(lambda, IntegralConstant<index + 1>());
+printLambda = [tpl](auto formatLambda) {
+  RecursiveLambda(
+    [](auto lambda, const auto& tpl, auto formatLambda, auto index) {
+      if constexpr(index < TupleSize<decltype(tpl)>()) {
+        std::stringstream str_stream;
+        str_stream << std::get<index>(tpl);
+
+        formatLambda(index, str_stream.str());
+
+        lambda(lambda, tpl, formatLambda, IntegralConstant<index + 1>());
+      }
     }
-  }
-)(IntegralConstant<0>());
-```
+  )(tpl, formatLambda, IntegralConstant<0>());
+};
 
-Example of how a new tuple with reversed elements can be created :
+printLambda([](int index, const std::string& tupleEl) {
+  std::cout << "tuple[" << index << "]: " << tupleEl << std::endl;
+});
 
+Example of how a new tuple with reversed elements can be created.
 ```C++
 auto reversedTpl = RecursiveLambda(
   [&tpl](auto lambda, auto index, auto&&...args) {
@@ -113,7 +123,7 @@ auto reversedTpl = RecursiveLambda(
 )(IntegralConstant<0>());
 ```
 
-Code above can be simplified if added `tuple<>()` parameter after lambda function :
+Code above can be simplified if added `tuple<>()` parameter after lambda function.
 ```C++
 auto reversedTpl = RecursiveLambda(
   [&tpl](auto lambda, auto index, const auto& curTpl) {
@@ -127,7 +137,7 @@ auto reversedTpl = RecursiveLambda(
 )(IntegralConstant<0>(), std::tuple<>());
 ```
 
-Example of how to cancatenate 2 tuples:
+Example of how to cancatenate 2 tuples.
 ```C++
 auto catTpl = RecursiveLambda(
   [&tpl1, &tpl2](auto lambda, auto index, auto&&...args) {
@@ -181,8 +191,6 @@ auto reversedTpl = RecursiveLambda(
   }
 )(tpl, IntegralConstant<0>(), std::tuple<>());
 ```
-
-
 
 It would be usefull in C++ to have keyword `lambda` (similar to keyword `this` inside a class).<br/>
 Then there is no need to use `RecursiveLambda` and code above could look like this.
