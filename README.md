@@ -163,8 +163,8 @@ auto catTpl = RecursiveLambda(
 )(IntegralConstant<0>());
 ```
 
-After posting this arcticle on reddit/cpp, reddit.com/user/dima_mendeleev suggested a simplification, with which
-no need to call `lambda(lambda, ...)`, just `lambda(...)`.
+After posting this arcticle on reddit/cpp, reddit.com/user/dima_mendeleev suggested a simplification,<br/>
+with which no need to call `lambda(lambda, ...)`, just `lambda(...)`.
 It compiles only with GCC 7.2.0.
 ```C++
 template <typename LAMBDA>
