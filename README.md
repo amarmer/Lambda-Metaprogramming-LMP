@@ -177,7 +177,7 @@ constexpr auto RecursiveLambda(LAMBDA lambda)
 }
 ```
 
-With modified `RecursiveLambda` factorial looks like:
+With modified `RecursiveLambda` function `reversedTpl` above looks like:
 ```C++
 auto reversedTpl = RecursiveLambda(
   [](auto lambda, const auto& tpl, auto index, const auto& curTpl) {
@@ -192,7 +192,7 @@ auto reversedTpl = RecursiveLambda(
 ```
 
 It would be usefull in C++ to have keyword `lambda` (similar to keyword `this` inside a class).<br/>
-Then there is no need to use `RecursiveLambda` and code above could look like this.
+Then there is no need to use `RecursiveLambda` and code above could look like:
 ```C++
 auto reversedTpl = [](const auto& tpl, auto index, const auto& curTpl) {
   if constexpr(index < TupleSize<decltype(tpl)>())
