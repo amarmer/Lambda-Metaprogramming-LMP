@@ -41,9 +41,7 @@ constexpr int factorial() {
 
 Bellow is implementation of factorial using LMP.
 
-Lambda doesn't have a name, and it is not possible to call it recursively. It would be usefull in `C++` to have keyword `lambda` (similar to keyword `this` inside a class).
-
-In order to simplify calling lambda recursively, a helper function `RecursiveLambda` is used.
+Lambda doesn't have a name, and it is not possible to call it recursively. In order to simplify calling lambda recursively, a helper function `RecursiveLambda` is used.
 
 ```C++
 template <typename LAMBDA>
@@ -186,4 +184,17 @@ auto reversedTpl = RecursiveLambda(
       return curTpl;
   }
 )(tpl, IntegralConstant<0>(), std::tuple<>());
+```
+
+It would be usefull in `C++` to have keyword `lambda` (similar to keyword `this` inside a class).
+Then code above could look like this.
+```C++
+auto reversedTpl = [](const auto& tpl, auto index, const auto& curTpl) {
+  if constexpr(index < TupleSize<decltype(tpl)>())
+    return lambda(tpl, 
+                  IntegralConstant<index + 1>(), 
+                  std::tuple_cat(std::make_tuple(std::get<index>(tpl)), curTpl));
+  else
+    return curTpl;
+}(tpl, IntegralConstant<0>(), std::tuple<>());
 ```
