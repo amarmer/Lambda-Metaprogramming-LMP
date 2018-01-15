@@ -189,7 +189,7 @@ auto reversedTpl = RecursiveLambda(
 
 
 It would be usefull in C++ to have keyword `lambda` (similar to keyword `this` inside a class).<br/>
-Then no need to use `RecursiveLambda` and code above could look like this.
+Then there is no need to use `RecursiveLambda` and code above could look like this.
 ```C++
 auto reversedTpl = [](const auto& tpl, auto index, const auto& curTpl) {
   if constexpr(index < TupleSize<decltype(tpl)>())
