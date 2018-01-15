@@ -5,28 +5,23 @@
 
 For instance in a template function `foo` to allocate array on stack using `std::array` with `type` and `size.
 ```C++
-template <typename T, int SIZE>
+template <int SIZE>
 void foo() {
-  std::array<T, SIZE> arr;
+  std::array<char, SIZE> arr;
 }
 
-foo<int, 100>();
+foo<100>();
 ```
 
 This is how it can be implemented using lambda.
 ```C++
-template <typename T>
-struct Type {
-  using type = T;
-};
-
-auto foo = [](auto type, auto size) {
-  std::array<typename decltype(type)::type, size> arr;
+auto foo = [](auto size) {
+  std::array<char, size> arr;
 };
     
-foo(Type<char>(), std::integral_constant<int, 100>());
+foo(std::integral_constant<int, 100>());
 ```
-`std::array<typename decltype(type)::type, size>` compiles because `size` is `std::integral_constant` which has `constexpr` cast operator to `int`.
+`std::array<char, size>` compiles because `size` is `std::integral_constant` which has `constexpr` cast operator to `int`.
 
 Oftem TMP is used with recursion. For instance, a classic example of calculating factorial using TMP.
 ```C++
