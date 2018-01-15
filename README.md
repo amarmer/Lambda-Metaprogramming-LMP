@@ -64,7 +64,7 @@ auto factorial = RecursiveLambda(
 constexpr auto factorial_5 = factorial(std::integral_constant<int, 5>());
 ```
 
-Let's look at more LMP examples with `tuple`.
+Bellow are LMP examples with `tuple`.
 
 Bellow is a helper function `TupleSize` wich simplifies getting size of a tuple.
 
