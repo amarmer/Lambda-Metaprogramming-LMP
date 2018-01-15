@@ -3,7 +3,33 @@
 ##### Word `metaprogramming` is used together with word `template` - `template metaprogramming (TMP)`. 
 ##### Here is described that `metaprogramming` can be used with `lambda` as well - `lambda metaprogramming (LMP)`. 
 
-This is a classic example of calculating factorial using TMP:
+For instance in a template function `foo` to allocate on stack `std::array` with `type` and `size`:
+```C++
+template <typename T, int SIZE>
+void foo() {
+  std::array<T, SIZE> arr;
+}
+
+foo<int, 100>();
+```
+
+Using lambda this can be implemented like:
+```C++
+template <typename T>
+struct Type {
+  using type = T;
+};
+
+auto foo = [](auto type, auto size) {
+  std::array<typename decltype(type)::type, size> arr;
+};
+    
+foo(Type<char>(), std::integral_constant<int, 100>());
+```
+`std::array<typename decltype(type)::type, size>` compiles because `size` is `std::integral_constant` which has `constexpr` cast operator to `int`.
+
+Very oftem TMP is used with recursion.
+For instance, a classic example of calculating factorial using TMP:
 ```C++
 template <unsigned int n>
 constexpr int factorial() {
@@ -38,8 +64,6 @@ auto factorial = [](auto n) {
 
 constexpr auto factorial_5 = factorial(std::integral_constant<int, 5>());
 ```
-
-Notice that `(0 == n)` compiles because `std::integral_constant` has `constexpr` cast operator to `int`.
 
 Let's look at more LMP examples with `tuple`.
 
