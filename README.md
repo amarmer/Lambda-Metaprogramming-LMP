@@ -88,10 +88,10 @@ printLambda = [&tpl](auto formatLambda) {
   RecursiveLambda(
     [](auto lambda, const auto& tpl, auto formatLambda, auto index) {
       if constexpr(index < TupleSize<decltype(tpl)>()) {
-        std::stringstream str_stream;
-        str_stream << std::get<index>(tpl);
+        std::stringstream strStream;
+        strStream << std::get<index>(tpl);
 
-        formatLambda(index, str_stream.str());
+        formatLambda(index, strStream.str());
 
         lambda(lambda, tpl, formatLambda, IntegralConstant<index + 1>());
       }
