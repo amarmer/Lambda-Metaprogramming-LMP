@@ -3,7 +3,7 @@
 ##### Word `metaprogramming` is used together with word `template` - `template metaprogramming (TMP)`. 
 ##### Here is described that `metaprogramming` can be used with `lambda` as well - `lambda metaprogramming (LMP)`. 
 
-For instance in a template function `foo` to allocate on stack `std::array` with `type` and `size`:
+For instance in a template function `foo` to allocate on stack using `std::array` with `type` and `size`.
 ```C++
 template <typename T, int SIZE>
 void foo() {
@@ -13,7 +13,7 @@ void foo() {
 foo<int, 100>();
 ```
 
-Using lambda this can be implemented like:
+Using lambda, this is how it can be implemented.
 ```C++
 template <typename T>
 struct Type {
@@ -28,8 +28,7 @@ foo(Type<char>(), std::integral_constant<int, 100>());
 ```
 `std::array<typename decltype(type)::type, size>` compiles because `size` is `std::integral_constant` which has `constexpr` cast operator to `int`.
 
-Very oftem TMP is used with recursion.
-For instance, a classic example of calculating factorial using TMP:
+Oftem TMP is used with recursion. For instance, a classic example of calculating factorial using TMP.
 ```C++
 template <unsigned int n>
 constexpr int factorial() {
@@ -42,25 +41,30 @@ constexpr int factorial() {
 
 Bellow is implementation of factorial using LMP.
 
-Since lambda doesn't have name, in order to simplify calling it recursively, a helper function `RecursiveLambda` is used.
+Lambda doesn't have a name, and it is not possible to call it recursively. It would be usefull in `C++` to have keyword `lambda` (similar to keyword `this` inside a class).
+
+In order to simplify calling lambda recursively, a helper function `RecursiveLambda` is used.
 
 ```C++
-template <typename LAMBDA, typename ...ARGS>
-constexpr auto RecursiveLambda(LAMBDA lambda, ARGS&&... args) { return lambda(lambda, args...); }
+template <typename LAMBDA>
+constexpr auto RecursiveLambda(LAMBDA lambda)
+{
+  return [lambda](auto&&... args)
+  {
+    return lambda(lambda, std::forward<decltype(args)>(args)...);
+  };
+}
 ```
 
 ```C++
-auto factorial = [](auto n) {
-  return RecursiveLambda(
-    [](auto lambda, auto n) {
-      if constexpr(0 == n)
-        return 1;
-      else
-        return n * lambda(lambda, std::integral_constant<int, n - 1>());
-    },
-    n
-  );
-};
+auto factorial = RecursiveLambda(
+  [&tpl](auto lambda, auto n) {
+    if constexpr(n == 0)
+      return 1;
+    else
+      return n * lambda(lambda, IntegralConstant<n - 1>());
+  }
+);
 
 constexpr auto factorial_5 = factorial(std::integral_constant<int, 5>());
 ```
@@ -69,21 +73,21 @@ Let's look at more LMP examples with `tuple`.
 
 Bellow is a helper function `TupleSize` wich simplifies getting size of a tuple.
 
-```C+ +
+```C++
 template <typename TPL>
 constexpr auto TupleSize() { return std::tuple_size<typename std::decay<TPL>::type>::value; }
 ```
 
 And a helper alias `IntegralConstant`.
 
-```C+ +
+```C++
 template <auto N>
 using IntegralConstant = std::integral_constant<decltype(N), N>;
 ```
 
 Example of how a tuple can be enumerated and it's elements are printed out:
 
-```C+ +
+```C++
 RecursiveLambda(
   [&tpl](auto lambda, auto index) {
     if constexpr(index < TupleSize<decltype(tpl)>()) {
@@ -91,9 +95,8 @@ RecursiveLambda(
 
       lambda(lambda, IntegralConstant<index + 1>());
     }
-  },
-  IntegralConstant<0>());
-);
+  }
+)(IntegralConstant<0>());
 ```
 
 Example of how a new tuple with reversed elements can be created :
@@ -111,9 +114,8 @@ auto reversedTpl = RecursiveLambda(
       else
         return std::forward<decltype(args)...>(args...);
     }
-  },
-  IntegralConstant<0>()
-);
+  }
+)(IntegralConstant<0>());
 ```
 
 Code above can be simplified if added `tuple<>()` parameter after lambda function :
@@ -123,14 +125,11 @@ auto reversedTpl = RecursiveLambda(
     if constexpr(index < TupleSize<decltype(tpl)>())
       return lambda(lambda, 
                     IntegralConstant<index + 1>(), 
-                    std::tuple_cat(std::make_tuple(std::get<index>(tpl)), 
-                    curTpl));
+                    std::tuple_cat(std::make_tuple(std::get<index>(tpl)), curTpl));
     else
       return curTpl;
-  },
-  IntegralConstant<0>(),
-  std::tuple<>()
-);
+  }
+)(IntegralConstant<0>(), std::tuple<>());
 ```
 
 Example of how to cancatenate 2 tuples:
@@ -170,7 +169,7 @@ constexpr auto RecursiveLambda(LAMBDA lambda)
 {
   return [lambda](auto&&... args)
   {
-    return lambda(RecursiveLambda(lambda), args...);
+    return lambda(RecursiveLambda(lambda), std::forward<decltype(args)>(args)...);
   };
 }
 ```
