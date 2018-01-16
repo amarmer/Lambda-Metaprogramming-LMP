@@ -181,7 +181,7 @@ constexpr auto RecursiveLambda(LAMBDA lambda)
 }
 ```
 
-With modified `RecursiveLambda` function above which creates reversed `tuple` looks like:
+With modified `RecursiveLambda` function above, which creates reversed `tuple`, it looks like:
 ```C++
 auto reversedTpl = RecursiveLambda(
   [&tpl](auto lambda, auto index, const auto& curTpl) {
