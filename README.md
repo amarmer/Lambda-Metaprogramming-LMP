@@ -84,7 +84,7 @@ Then this function can be used to print tuple's elements using `format` lambda w
 ```C++
 std::function<void(std::function<void(int, const std::string&)>)> printLambda;
 
-printLambda = [&tpl](auto formatLambda) {
+printLambda = [&tpl](auto format) {
   RecursiveLambda(
     [](auto lambda, const auto& tpl, auto format, auto index) {
       if constexpr(index < TupleSize<decltype(tpl)>()) {
@@ -96,7 +96,7 @@ printLambda = [&tpl](auto formatLambda) {
         lambda(lambda, tpl, format, IntegralConstant<index + 1>());
       }
     }
-  )(tpl, formatLambda, IntegralConstant<0>());
+  )(tpl, format, IntegralConstant<0>());
 };
 
 printLambda([](int index, const std::string& tupleEl) {
