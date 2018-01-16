@@ -37,7 +37,7 @@ constexpr int factorial() {
 Bellow is implementation of factorial using LMP.
 
 Lambda doesn't have a name, and it is not possible to call it recursively.<br/>
-In order to simplify calling lambda recursively, a helper function `RecursiveLambda` is used.
+In order to call lambda recursively, a helper function `RecursiveLambda` is used.
 
 ```C++
 template <typename LAMBDA>
