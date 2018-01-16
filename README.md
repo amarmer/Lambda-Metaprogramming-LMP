@@ -155,7 +155,10 @@ auto catTpl = RecursiveLambda(
         return lambda(lambda, IntegralConstant<index + 1>(), getEl(index));
       else
         if constexpr(index < total)
-          return lambda(lambda, IntegralConstant<index + 1>(), std::forward<decltype(args)>(args)..., getEl(index));
+          return lambda(lambda, 
+                        IntegralConstant<index + 1>(), 
+                        std::forward<decltype(args)>(args)..., 
+                        getEl(index));
         else
           return std::make_tuple(args...);
     }
