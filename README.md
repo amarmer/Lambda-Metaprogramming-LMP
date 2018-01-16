@@ -79,21 +79,21 @@ using IntegralConstant = std::integral_constant<decltype(N), N>;
 ```
 
 Example of lambda function `printLambda` which enumerates a `tuple` and converts each tuple's element to `string`.<br/> 
-Then this function can be used to print tuple's elements using formatting lambda which is passed as a parameter.
+Then this function can be used to print tuple's elements using `format` lambda which is passed as a parameter.
 
 ```C++
 std::function<void(std::function<void(int, const std::string&)>)> printLambda;
 
 printLambda = [&tpl](auto formatLambda) {
   RecursiveLambda(
-    [](auto lambda, const auto& tpl, auto formatLambda, auto index) {
+    [](auto lambda, const auto& tpl, auto format, auto index) {
       if constexpr(index < TupleSize<decltype(tpl)>()) {
         std::stringstream strStream;
         strStream << std::get<index>(tpl);
 
-        formatLambda(index, strStream.str());
+        format(index, strStream.str());
 
-        lambda(lambda, tpl, formatLambda, IntegralConstant<index + 1>());
+        lambda(lambda, tpl, format, IntegralConstant<index + 1>());
       }
     }
   )(tpl, formatLambda, IntegralConstant<0>());
