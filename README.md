@@ -160,7 +160,7 @@ auto catTpl = RecursiveLambda(
                         std::forward<decltype(args)>(args)..., 
                         getEl(index));
         else
-          return std::make_tuple(args...);
+          return std::make_tuple(std::forward<decltype(args)>(args)...);
     }
   }
 )(IntegralConstant<0>());
