@@ -123,7 +123,7 @@ auto reversedTpl = RecursiveLambda(
 )(IntegralConstant<0>());
 ```
 
-Code above can be simplified if added `tuple<>()` parameter after lambda function.
+Code above can be simplified if added second parameter `std::tuple<>()`.
 ```C++
 auto reversedTpl = RecursiveLambda(
   [&tpl](auto lambda, auto index, const auto& curTpl) {
