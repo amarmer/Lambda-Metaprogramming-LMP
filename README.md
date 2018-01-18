@@ -66,7 +66,7 @@ constexpr auto factorial_5 = factorial(std::integral_constant<int, 5>());
 
 Bellow are LMP examples with `tuple`.
 
-`TupleSize` is a helper function wich simplifies getting size of a tuple.
+`TupleSize` is a helper function which simplifies getting size of a tuple.
 ```C++
 template <typename TPL>
 constexpr auto TupleSize() { return std::tuple_size<typename std::decay<TPL>::type>::value; }
