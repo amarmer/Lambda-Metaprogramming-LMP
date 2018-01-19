@@ -53,7 +53,7 @@ constexpr auto RecursiveLambda(LAMBDA lambda)
 Factorial implementation using `RecursiveLambda`.
 ```C++
 auto factorial = RecursiveLambda(
-  [&tpl](auto lambda, auto n) {
+  [](auto lambda, auto n) {
     if constexpr(n == 0)
       return 1;
     else
