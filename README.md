@@ -1,7 +1,7 @@
 # Lambda Metaprogramming (LMP)
 
 ##### Word `metaprogramming` is used together with word `template` - `template metaprogramming (TMP)`. 
-##### Here is described that `metaprogramming` can be used with `lambda` as well - `lambda metaprogramming (LMP)`. 
+##### Here is described that `metaprogramming` can be used with word `lambda` as well - `lambda metaprogramming (LMP)`. 
 
 For instance in a template function `foo` allocates array on stack using `std::array`.
 ```C++
@@ -22,6 +22,15 @@ auto foo = [](auto size) {
 foo(std::integral_constant<int, 100>());
 ```
 `std::array<char, size>` compiles because `size` is `std::integral_constant` which has `constexpr` cast operator to `int`.
+
+Another way to implement it.
+```C++
+auto foo = [](auto* pSize) {
+  std::array<char, sizeof(*pSize)> arr;
+};
+    
+foo((char (*)[100])());
+```
 
 TMP is often used with recursion. For instance, a classic example of calculating factorial using TMP.
 ```C++
