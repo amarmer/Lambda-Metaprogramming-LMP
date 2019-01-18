@@ -1,4 +1,7 @@
-# Lambda Metaprogramming (LMP)
+
+## Lambda Metaprogramming (LMP)
+
+Published in https://isocpp.org/blog/2018/01/recursive-lambda-and-metaprogramming
 
 ##### Word `metaprogramming` is used together with word `template` - `template metaprogramming (TMP)`. 
 ##### Here is described that `metaprogramming` can be used with word `lambda` as well - `lambda metaprogramming (LMP)`. 
